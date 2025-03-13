@@ -162,7 +162,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		searchBySurnameField.addActionListener(this);
 		searchBySurnameField.setDocument(new JTextFieldLimit(20));
 		searchPanel.add(
-				searchSurname = new JButton("Go"),"width 35:35:35, height 20:20:20, growx, pushx, wrap");
+				searchSurname = new JButton("Go"), "width 35:35:35, height 20:20:20, growx, pushx, wrap");
 		searchSurname.addActionListener(this);
 		searchSurname.setToolTipText("Search Employee By Surname");
 
@@ -345,14 +345,18 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// display search by ID dialog
 	private void displaySearchByIdDialog() {
-		if (isSomeoneToDisplay())
-			new SearchByIdDialog(EmployeeDetails.this);
+		if (isSomeoneToDisplay()) {
+			SearchDialogFactory factory = new SearchByIdDialogFactory();
+			factory.createSearchDialog(this);
+		}
 	}// end displaySearchByIdDialog
 
 	// display search by surname dialog
 	private void displaySearchBySurnameDialog() {
-		if (isSomeoneToDisplay())
-			new SearchBySurnameDialog(EmployeeDetails.this);
+		if (isSomeoneToDisplay()) {
+			SearchDialogFactory factory = new SearchBySurnameDialogFactory();
+			factory.createSearchDialog(this);
+		}
 	}// end displaySearchBySurnameDialog
 
 	// find byte start in file for first active record
@@ -652,9 +656,9 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		// check for correct PPS format based on assignment description
 		if (pps.length() == 8 || pps.length() == 9) {
 			if (Character.isDigit(pps.charAt(0)) && Character.isDigit(pps.charAt(1))
-					&& Character.isDigit(pps.charAt(2))	&& Character.isDigit(pps.charAt(3)) 
-					&& Character.isDigit(pps.charAt(4))	&& Character.isDigit(pps.charAt(5)) 
-					&& Character.isDigit(pps.charAt(6))	&& Character.isLetter(pps.charAt(7))
+					&& Character.isDigit(pps.charAt(2)) && Character.isDigit(pps.charAt(3))
+					&& Character.isDigit(pps.charAt(4)) && Character.isDigit(pps.charAt(5))
+					&& Character.isDigit(pps.charAt(6)) && Character.isLetter(pps.charAt(7))
 					&& (pps.length() == 8 || Character.isLetter(pps.charAt(8)))) {
 				// open file for reading
 				application.openReadFile(file.getAbsolutePath());
