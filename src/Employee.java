@@ -4,7 +4,7 @@
  * 
  * */
 
-public class Employee{
+public class Employee implements Cloneable{
 	private int employeeId;
 	private String pps;
 	private String surname;
@@ -149,6 +149,15 @@ public class Employee{
 	public void setFullTime(boolean fullTime) {
 		this.fullTime = fullTime;
 	}
+
+	@Override
+    public Employee clone() {
+        try {
+            return (Employee) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Cloning failed");
+        }
+    }
 
 	// Display Employee details
 	public String toString() {
