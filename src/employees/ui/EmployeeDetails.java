@@ -1,3 +1,4 @@
+package employees.ui;
 
 /* * 
  * This is a menu driven system that will allow users to define a data structure representing a collection of 
@@ -47,6 +48,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import employees.data.RandomFile;
+import employees.manager.EmployeeManager;
+import employees.model.Employee;
+import employees.search.SearchByIdDialogFactory;
+import employees.search.SearchBySurnameDialog;
+import employees.search.SearchBySurnameDialogFactory;
 import net.miginfocom.swing.MigLayout;
 
 public class EmployeeDetails extends JFrame implements ActionListener, ItemListener, DocumentListener, WindowListener {
@@ -85,6 +92,8 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 	String[] department = { "", "Administration", "Production", "Transport", "Management" };
 	// full time combo box values
 	String[] fullTime = { "", "Yes", "No" };
+	private EmployeeManager employeeManager;
+
 
 	// initialize menu bar
 	private JMenuBar menuBar() {
@@ -162,7 +171,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		searchBySurnameField.addActionListener(this);
 		searchBySurnameField.setDocument(new JTextFieldLimit(20));
 		searchPanel.add(
-				searchSurname = new JButton("Go"),"width 35:35:35, height 20:20:20, growx, pushx, wrap");
+				searchSurname = new JButton("Go"), "width 35:35:35, height 20:20:20, growx, pushx, wrap");
 		searchSurname.addActionListener(this);
 		searchSurname.setToolTipText("Search Employee By Surname");
 
@@ -345,14 +354,18 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// display search by ID dialog
 	private void displaySearchByIdDialog() {
-		if (isSomeoneToDisplay())
-			new SearchByIdDialog(EmployeeDetails.this);
+		if (isSomeoneToDisplay()) {
+			SearchDialogFactory factory = new SearchByIdDialogFactory();
+			factory.createSearchDialog(this);
+		}
 	}// end displaySearchByIdDialog
 
 	// display search by surname dialog
 	private void displaySearchBySurnameDialog() {
-		if (isSomeoneToDisplay())
-			new SearchBySurnameDialog(EmployeeDetails.this);
+		if (isSomeoneToDisplay()) {
+			SearchDialogFactory factory = new SearchBySurnameDialogFactory();
+			factory.createSearchDialog(this);
+		}
 	}// end displaySearchBySurnameDialog
 
 	// find byte start in file for first active record
@@ -529,28 +542,27 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		return nextFreeId;
 	}// end getNextFreeId
 
-	// get values from text fields and create Employee object
 	private Employee getChangedDetails() {
-		boolean fullTime = false;
-		Employee theEmployee;
-		if (((String) fullTimeCombo.getSelectedItem()).equalsIgnoreCase("Yes"))
-			fullTime = true;
-
-		theEmployee = new Employee(Integer.parseInt(idField.getText()), ppsField.getText().toUpperCase(),
-				surnameField.getText().toUpperCase(), firstNameField.getText().toUpperCase(),
-				genderCombo.getSelectedItem().toString().charAt(0), departmentCombo.getSelectedItem().toString(),
-				Double.parseDouble(salaryField.getText()), fullTime);
-
+		boolean fullTime = ((String) fullTimeCombo.getSelectedItem()).equalsIgnoreCase("Yes");
+	
+		// using the Builder pattern
+		Employee theEmployee = new Employee.Builder()
+				.setEmployeeId(Integer.parseInt(idField.getText()))
+				.setPps(ppsField.getText().toUpperCase())
+				.setSurname(surnameField.getText().toUpperCase())
+				.setFirstName(firstNameField.getText().toUpperCase())
+				.setGender(genderCombo.getSelectedItem().toString().charAt(0))
+				.setDepartment(departmentCombo.getSelectedItem().toString())
+				.setSalary(Double.parseDouble(salaryField.getText()))
+				.setFullTime(fullTime)
+				.build();
+	
 		return theEmployee;
-	}// end getChangedDetails
+	}
 
 	// add Employee object to fail
 	public void addRecord(Employee newEmployee) {
-		// open file for writing
-		application.openWriteFile(file.getAbsolutePath());
-		// write into a file
-		currentByteStart = application.addRecords(newEmployee);
-		application.closeWriteFile();// close file for writing
+		employeeManager.addEmployee(newEmployee);
 	}// end addRecord
 
 	// delete (make inactive - empty) record from file
@@ -652,9 +664,9 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		// check for correct PPS format based on assignment description
 		if (pps.length() == 8 || pps.length() == 9) {
 			if (Character.isDigit(pps.charAt(0)) && Character.isDigit(pps.charAt(1))
-					&& Character.isDigit(pps.charAt(2))	&& Character.isDigit(pps.charAt(3)) 
-					&& Character.isDigit(pps.charAt(4))	&& Character.isDigit(pps.charAt(5)) 
-					&& Character.isDigit(pps.charAt(6))	&& Character.isLetter(pps.charAt(7))
+					&& Character.isDigit(pps.charAt(2)) && Character.isDigit(pps.charAt(3))
+					&& Character.isDigit(pps.charAt(4)) && Character.isDigit(pps.charAt(5))
+					&& Character.isDigit(pps.charAt(6)) && Character.isLetter(pps.charAt(7))
 					&& (pps.length() == 8 || Character.isLetter(pps.charAt(8)))) {
 				// open file for reading
 				application.openReadFile(file.getAbsolutePath());
@@ -863,20 +875,15 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 	private void saveChanges() {
 		int returnVal = JOptionPane.showOptionDialog(frame, "Do you want to save changes to current Employee?", "Save",
 				JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		// if user choose to save changes, save changes
 		if (returnVal == JOptionPane.YES_OPTION) {
-			// open file for writing
-			application.openWriteFile(file.getAbsolutePath());
-			// get changes for current Employee
 			currentEmployee = getChangedDetails();
-			// write changes to file for corresponding Employee record
-			application.changeRecords(currentEmployee, currentByteStart);
-			application.closeWriteFile();// close file for writing
-			changesMade = false;// state that all changes has bee saved
-		} // end if
+			employeeManager.updateEmployee(currentEmployee, currentByteStart);
+			changesMade = false;
+		}
 		displayRecords(currentEmployee);
 		setEnabled(false);
-	}// end saveChanges
+	}
+	
 
 	// save file as 'save as'
 	private void saveFileAs() {
@@ -976,6 +983,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		file = new File(generatedFileName);
 		// create file
 		application.createFile(file.getName());
+		employeeManager = new EmployeeManager(file);
 	}// end createRandomFile
 
 	// action listener for buttons, text field and menu items

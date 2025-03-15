@@ -1,3 +1,4 @@
+package employees.model;
 /*
  * 
  * This is a Random Access Employee record definition

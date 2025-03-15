@@ -1,10 +1,11 @@
+package employees.model;
 /*
  * 
  * This is the definition of the Employee object
  * 
  * */
 
-public class Employee{
+public class Employee implements Cloneable{
 	private int employeeId;
 	private String pps;
 	private String surname;
@@ -26,18 +27,63 @@ public class Employee{
 		this.fullTime = false;
 	}//end Employee with no details
 
-	// Create Employee with details
-	public Employee(int employeeId, String pps, String surname, String firstName, char gender, String department, double salary,
-			boolean fullTime) {
-		this.employeeId = employeeId;
-		this.pps = pps;
-		this.surname = surname;
-		this.firstName = firstName;
-		this.gender = gender;
-		this.department = department;
-		this.salary = salary;
-		this.fullTime = fullTime;
-	}// end Employee with details
+	private Employee(Builder builder) {
+        this.employeeId = builder.employeeId;
+        this.pps = builder.pps;
+        this.surname = builder.surname;
+        this.firstName = builder.firstName;
+        this.gender = builder.gender;
+        this.department = builder.department;
+        this.salary = builder.salary;
+        this.fullTime = builder.fullTime;
+    }
+
+	public static class Builder {
+        private int employeeId;
+        private String pps;
+        private String surname;
+        private String firstName;
+        private char gender;
+        private String department;
+        private double salary;
+        private boolean fullTime;
+        
+        public Builder setEmployeeId(int id) { 
+            this.employeeId = id; 
+            return this;
+        }
+        public Builder setPps(String pps) { 
+            this.pps = pps; 
+            return this;
+        }
+        public Builder setSurname(String surname) { 
+            this.surname = surname; 
+            return this;
+        }
+        public Builder setFirstName(String firstName) { 
+            this.firstName = firstName; 
+            return this;
+        }
+        public Builder setGender(char gender) { 
+            this.gender = gender; 
+            return this;
+        }
+        public Builder setDepartment(String department) { 
+            this.department = department; 
+            return this;
+        }
+        public Builder setSalary(double salary) { 
+            this.salary = salary; 
+            return this;
+        }
+        public Builder setFullTime(boolean fullTime) { 
+            this.fullTime = fullTime; 
+            return this;
+        }
+        public Employee build() {
+            return new Employee(this);
+        }
+    }
 
 	// Getter methods
 	public int getEmployeeId() {
@@ -104,6 +150,15 @@ public class Employee{
 	public void setFullTime(boolean fullTime) {
 		this.fullTime = fullTime;
 	}
+
+	@Override
+    public Employee clone() {
+        try {
+            return (Employee) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError("Cloning failed");
+        }
+    }
 
 	// Display Employee details
 	public String toString() {
