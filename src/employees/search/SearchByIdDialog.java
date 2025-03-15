@@ -1,5 +1,8 @@
+package employees.search;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+
+import employees.ui.EmployeeDetails;
 
 public class SearchByIdDialog extends SearchDialog {
     public SearchByIdDialog(EmployeeDetails parent) {

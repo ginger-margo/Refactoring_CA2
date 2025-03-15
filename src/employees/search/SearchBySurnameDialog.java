@@ -1,10 +1,13 @@
+package employees.search;
 /*
  * 
  * This is a dialog for searching Employees by their surname.
  * 
  * */
 
- public class SearchBySurnameDialog extends SearchDialog {
+import employees.ui.EmployeeDetails;
+
+public class SearchBySurnameDialog extends SearchDialog {
     public SearchBySurnameDialog(EmployeeDetails parent) {
         super(parent, "Search by Surname", "Enter Surname:");
     }

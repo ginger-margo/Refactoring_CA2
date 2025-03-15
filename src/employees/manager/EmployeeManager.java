@@ -1,4 +1,8 @@
+package employees.manager;
 import java.io.File;
+
+import employees.data.RandomFile;
+import employees.model.Employee;
 
 public class EmployeeManager {
     private RandomFile fileHandler;

@@ -1,3 +1,4 @@
+package employees.data;
 /*
  * 
  * This class is for accessing, creating and modifying records in a file
@@ -10,6 +11,9 @@ import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
+
+import employees.model.Employee;
+import employees.model.RandomAccessEmployeeRecord;
 
 public class RandomFile {
 	private RandomAccessFile output;

@@ -1,8 +1,14 @@
+package employees.search;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+
+import employees.ui.EmployeeDetails;
+import employees.ui.JTextFieldLimit;
+import employees.ui.JTextFieldLimitAdapter;
+import employees.ui.TextFieldAdapter;
 
 public abstract class SearchDialog extends JDialog implements ActionListener {
     protected EmployeeDetails parent;

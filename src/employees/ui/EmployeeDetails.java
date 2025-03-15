@@ -1,3 +1,4 @@
+package employees.ui;
 
 /* * 
  * This is a menu driven system that will allow users to define a data structure representing a collection of 
@@ -47,6 +48,12 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import employees.data.RandomFile;
+import employees.manager.EmployeeManager;
+import employees.model.Employee;
+import employees.search.SearchByIdDialogFactory;
+import employees.search.SearchBySurnameDialog;
+import employees.search.SearchBySurnameDialogFactory;
 import net.miginfocom.swing.MigLayout;
 
 public class EmployeeDetails extends JFrame implements ActionListener, ItemListener, DocumentListener, WindowListener {

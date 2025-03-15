@@ -1,3 +1,4 @@
+package employees.ui;
 /*
  * 
  * This is a dialog for adding new Employees and saving records to file
@@ -20,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import employees.model.Employee;
 import net.miginfocom.swing.MigLayout;
 
 public class AddRecordDialog extends JDialog implements ActionListener {

@@ -1,3 +1,4 @@
+package employees.model;
 /*
  * 
  * This is the definition of the Employee object
