@@ -533,20 +533,23 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		return nextFreeId;
 	}// end getNextFreeId
 
-	// get values from text fields and create Employee object
 	private Employee getChangedDetails() {
-		boolean fullTime = false;
-		Employee theEmployee;
-		if (((String) fullTimeCombo.getSelectedItem()).equalsIgnoreCase("Yes"))
-			fullTime = true;
-
-		theEmployee = new Employee(Integer.parseInt(idField.getText()), ppsField.getText().toUpperCase(),
-				surnameField.getText().toUpperCase(), firstNameField.getText().toUpperCase(),
-				genderCombo.getSelectedItem().toString().charAt(0), departmentCombo.getSelectedItem().toString(),
-				Double.parseDouble(salaryField.getText()), fullTime);
-
+		boolean fullTime = ((String) fullTimeCombo.getSelectedItem()).equalsIgnoreCase("Yes");
+	
+		// using the Builder pattern
+		Employee theEmployee = new Employee.Builder()
+				.setEmployeeId(Integer.parseInt(idField.getText()))
+				.setPps(ppsField.getText().toUpperCase())
+				.setSurname(surnameField.getText().toUpperCase())
+				.setFirstName(firstNameField.getText().toUpperCase())
+				.setGender(genderCombo.getSelectedItem().toString().charAt(0))
+				.setDepartment(departmentCombo.getSelectedItem().toString())
+				.setSalary(Double.parseDouble(salaryField.getText()))
+				.setFullTime(fullTime)
+				.build();
+	
 		return theEmployee;
-	}// end getChangedDetails
+	}
 
 	// add Employee object to fail
 	public void addRecord(Employee newEmployee) {
