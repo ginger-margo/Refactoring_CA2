@@ -7,7 +7,7 @@ import javax.swing.border.EtchedBorder;
 public abstract class SearchDialog extends JDialog implements ActionListener {
     protected EmployeeDetails parent;
     protected JButton search, cancel;
-    protected JTextField searchField;
+    protected TextFieldAdapter searchField; 
     protected JLabel searchLabel;
 
     public SearchDialog(EmployeeDetails parent, String title, String labelText) {
@@ -15,6 +15,8 @@ public abstract class SearchDialog extends JDialog implements ActionListener {
         setModal(true);
         this.parent = parent;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        searchField = new JTextFieldLimitAdapter(new JTextField(20), new JTextFieldLimit(20)); 
 
         JScrollPane scrollPane = new JScrollPane(createSearchPane(labelText));
         setContentPane(scrollPane);
@@ -35,9 +37,9 @@ public abstract class SearchDialog extends JDialog implements ActionListener {
         textPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         textPanel.add(searchLabel = new JLabel(labelText));
         searchLabel.setFont(parent.font1);
-        textPanel.add(searchField = new JTextField(20));
+
+        textPanel.add(searchField.getTextField()); 
         searchField.setFont(parent.font1);
-        searchField.setDocument(new JTextFieldLimit(20));
 
         buttonPanel.add(search = new JButton("Search"));
         search.addActionListener(this);
@@ -61,5 +63,5 @@ public abstract class SearchDialog extends JDialog implements ActionListener {
         }
     }
 
-    protected abstract void handleSearch(); 
+    protected abstract void handleSearch();
 }

@@ -4,7 +4,7 @@
  * 
  * */
 
-public class SearchBySurnameDialog extends SearchDialog {
+ public class SearchBySurnameDialog extends SearchDialog {
     public SearchBySurnameDialog(EmployeeDetails parent) {
         super(parent, "Search by Surname", "Enter Surname:");
     }
