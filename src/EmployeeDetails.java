@@ -85,6 +85,8 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 	String[] department = { "", "Administration", "Production", "Transport", "Management" };
 	// full time combo box values
 	String[] fullTime = { "", "Yes", "No" };
+	private EmployeeManager employeeManager;
+
 
 	// initialize menu bar
 	private JMenuBar menuBar() {
@@ -553,11 +555,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 
 	// add Employee object to fail
 	public void addRecord(Employee newEmployee) {
-		// open file for writing
-		application.openWriteFile(file.getAbsolutePath());
-		// write into a file
-		currentByteStart = application.addRecords(newEmployee);
-		application.closeWriteFile();// close file for writing
+		employeeManager.addEmployee(newEmployee);
 	}// end addRecord
 
 	// delete (make inactive - empty) record from file
@@ -870,20 +868,15 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 	private void saveChanges() {
 		int returnVal = JOptionPane.showOptionDialog(frame, "Do you want to save changes to current Employee?", "Save",
 				JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, null, null);
-		// if user choose to save changes, save changes
 		if (returnVal == JOptionPane.YES_OPTION) {
-			// open file for writing
-			application.openWriteFile(file.getAbsolutePath());
-			// get changes for current Employee
 			currentEmployee = getChangedDetails();
-			// write changes to file for corresponding Employee record
-			application.changeRecords(currentEmployee, currentByteStart);
-			application.closeWriteFile();// close file for writing
-			changesMade = false;// state that all changes has bee saved
-		} // end if
+			employeeManager.updateEmployee(currentEmployee, currentByteStart);
+			changesMade = false;
+		}
 		displayRecords(currentEmployee);
 		setEnabled(false);
-	}// end saveChanges
+	}
+	
 
 	// save file as 'save as'
 	private void saveFileAs() {
@@ -983,6 +976,7 @@ public class EmployeeDetails extends JFrame implements ActionListener, ItemListe
 		file = new File(generatedFileName);
 		// create file
 		application.createFile(file.getName());
+		employeeManager = new EmployeeManager(file);
 	}// end createRandomFile
 
 	// action listener for buttons, text field and menu items
